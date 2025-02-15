@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace quizHub
+namespace QuizHub
 {
 
 

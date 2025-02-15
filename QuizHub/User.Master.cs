@@ -7,11 +7,11 @@ using System.Web.UI.WebControls;
 
 namespace QuizHub
 {
-    public partial class User : System.Web.UI.MasterPage
-    {
-        protected void Page_Load(object sender, EventArgs e)
-        {
+	public partial class User : System.Web.UI.MasterPage
+	{
+		protected void Page_Load(object sender, EventArgs e)
+		{
 
-        }
-    }
+		}
+	}
 }

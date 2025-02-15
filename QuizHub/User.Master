@@ -151,8 +151,7 @@
             bottom: 20px;
             width: calc(100% - 40px);
         }
-
-            .sidebar .logout a {
+        .sidebar .logout a {
                 position: absolute;
                 bottom: 20px;
                 width: calc(100% - 40px);

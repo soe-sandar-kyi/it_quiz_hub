@@ -166,8 +166,7 @@
 <body>
   <form id="form1" runat="server">
     <button class="hamburger" id="hamburger">☰</button>
-
-    <!-- Vertical Navigation Bar -->
+      <!-- Vertical Navigation Bar -->
     <div class="sidebar" id="sidebar">
       <h2>QuizHut</h2>
       <ul>

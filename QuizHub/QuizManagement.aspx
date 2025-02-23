@@ -1,14 +1,17 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin.Master" AutoEventWireup="true" CodeBehind="QuizManagement.aspx.cs" Inherits="QuizHub.QuizManagement" %>   
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin.Master" AutoEventWireup="true" CodeBehind="QuizManagement.aspx.cs" Inherits="QuizHub.QuizManagement" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Font Awesome -->
 
     <h2 class="mb-4">Quiz Management</h2>
 
     <div class="container-fluid">
         <!-- Add Quiz Button -->
-        <button class="btn btn-success mb-3" data-toggle="modal" data-target="#addQuizModal">Create New Quiz</button>
-
+        <div class="d-flex justify-content-end mb-3">
+            <button class="btn btn-success mb-3" data-toggle="modal" data-target="#addQuizModal">Create Quiz</button>
+        </div>
         <!-- Quizzes Table -->
         <table class="table table-bordered table-striped">
             <thead>
@@ -99,4 +102,3 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </asp:Content>
- 

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -12,14 +14,27 @@ namespace QuizHub
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            LoadCategories();
+        }
+        private void LoadCategories()
+        {
+            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\SoeSandarKyi\Desktop\Online Quiz\it_quiz_hub\QuizHub\App_Data\QuizHub.mdf;Integrated Security=True";
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = @"SELECT Id, Name FROM Category";
+                SqlDataAdapter da = new SqlDataAdapter(query, conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
 
+                rptCategories.DataSource = dt;
+                rptCategories.DataBind();
+            }
         }
         protected void btnSaveCategory_Click(object sender, EventArgs e)
         {
             string categoryName = txtCategoryName.Text.Trim();
             if (!string.IsNullOrEmpty(categoryName))
             {
-                // Connection string (replace with your connection details)
                 string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\SoeSandarKyi\Desktop\Online Quiz\it_quiz_hub\QuizHub\App_Data\QuizHub.mdf;Integrated Security=True";
 
                 SqlConnection connection = new SqlConnection(connectionString);

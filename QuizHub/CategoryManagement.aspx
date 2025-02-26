@@ -2,6 +2,16 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .table-row-height {
+            height: 10px;
+        }
+    </style>
 
     <h2 class="mb-4">Categories</h2>
 
@@ -14,7 +24,7 @@
         <!-- Category Table -->
 
         <table class="table table-bordered table-hover">
-            <thead class="bg-success text-white">
+            <thead class="text-white" style="background-color:#1abc9c">
                 <tr>
                     <th style="width: 10%;">Category Id</th>
                     <th style="width: 60%;">Category Name</th>
@@ -24,7 +34,7 @@
             <tbody>
                 <asp:Repeater ID="rptCategories" runat="server">
                     <ItemTemplate>
-                        <tr style="height:5%">
+                        <tr class="table-row-height">
                             <td><%# Eval("Id") %></td>
                             <td><%# Eval("Name") %></td>
                             <td>
@@ -73,9 +83,6 @@
             </div>
         </div>
     </div>
-    <label id="lblMessage" runat="server"></label>
-
-
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </asp:Content>

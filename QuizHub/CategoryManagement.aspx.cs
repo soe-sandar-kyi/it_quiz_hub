@@ -14,7 +14,10 @@ namespace QuizHub
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            LoadCategories();
+            if (!IsPostBack)
+            {
+                LoadCategories();
+            }
         }
         private void LoadCategories()
         {
@@ -38,25 +41,49 @@ namespace QuizHub
                 string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\SoeSandarKyi\Desktop\Online Quiz\it_quiz_hub\QuizHub\App_Data\QuizHub.mdf;Integrated Security=True";
 
                 SqlConnection connection = new SqlConnection(connectionString);
+                connection.Open();
+
+                // Step 1: Get the latest Category ID
+                string getMaxIdQuery = "SELECT TOP 1 Id FROM Category ORDER BY Created_Date DESC";
+                SqlCommand getMaxIdCmd = new SqlCommand(getMaxIdQuery, connection);
+                object maxIdObj = getMaxIdCmd.ExecuteScalar();
+
+                // Step 2: Determine the new Category ID
+                int newIdNumber = 1; // Default if no existing category
+                if (maxIdObj != null)
+                {
+                    string maxId = maxIdObj.ToString(); // e.g., "CID-10"
+                    int lastNumber;
+                    if (int.TryParse(maxId.Replace("CID-", ""), out lastNumber))
+                    {
+                        newIdNumber = lastNumber + 1;
+                    }
+                }
+                string newCategoryId = "CID-" + newIdNumber; // Generate new ID
 
                 string query = "INSERT INTO Category (Id,Name,Admin_Id,Created_Date) VALUES (@id,@name,@admin_id,@created_date)";
                 SqlCommand cmd = new SqlCommand(query, connection);
-                cmd.Parameters.AddWithValue("@id", "CID-1");
+                cmd.Parameters.AddWithValue("@id", newCategoryId);
                 cmd.Parameters.AddWithValue("@name", categoryName);
                 cmd.Parameters.AddWithValue("@admin_id", "AID-1");
                 cmd.Parameters.AddWithValue("@created_date", DateTime.Now);
 
                 try
                 {
-                    connection.Open();
                     cmd.ExecuteNonQuery();
-                    // Optionally, you can reload the categories table or show a success message
-                    lblMessage.InnerText = "Category added successfully!";
 
+                    // Reload the categories immediately
+                    LoadCategories();
+
+                    // Show SweetAlert2 success message
+                    ScriptManager.RegisterStartupScript(this, GetType(), "ShowSweetAlert",
+                        "Swal.fire({ title: 'Success!', text: 'Category added successfully!', icon: 'success', confirmButtonText: 'OK' });", true);
                 }
                 catch (Exception ex)
                 {
-                    lblMessage.InnerText = "Error: " + ex.Message;
+                    ScriptManager.RegisterStartupScript(this, GetType(), "ShowErrorAlert",
+    "Swal.fire({ title: 'Error!', text: '" + ex.Message + "', icon: 'error', confirmButtonText: 'OK' });", true);
+
                 }
 
 
@@ -64,10 +91,13 @@ namespace QuizHub
                 txtCategoryName.Text = string.Empty;
                 // Close the modal
                 ScriptManager.RegisterStartupScript(this, GetType(), "CloseModal", "$('#addQuizModal').modal('hide');", true);
+
             }
             else
             {
-                lblMessage.InnerText = "Please enter a category name.";
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowErrorAlert",
+    "Swal.fire({ title: 'Error!', text: '" +"Please enter category name" + "', icon: 'error', confirmButtonText: 'OK' });", true);
+
             }
         }
     }

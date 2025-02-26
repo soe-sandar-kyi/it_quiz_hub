@@ -3,7 +3,11 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Font Awesome -->
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <h2 class="mb-4">Quiz Management</h2>
 
@@ -14,50 +18,50 @@
         </div>
 
         <!-- Quizzes Table -->
-       <table class="table table-bordered table-hover">
-    <thead class="bg-success text-white">
-        <tr>
-            <th style="width: 5%;">No</th>
-            <th style="width: 20%;">Question</th>
-            <th style="width: 10%;">Option A</th>
-            <th style="width: 10%;">Option B</th>
-            <th style="width: 10%;">Option C</th>
-            <th style="width: 10%;">Option D</th>
-            <th style="width: 5%;">Answer</th>
-            <th style="width: 5%;">Category</th>
-            <th style="width: 10%;">Level</th>
-            <th style="width: 15%;">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <asp:Repeater ID="rptCategories" runat="server">
-            <ItemTemplate>
-                <tr style="height: 5%">
-                    <td><%# Eval("Id") %></td>
-                    <td><%# Eval("Question_Text") %></td>
-                    <td><%# Eval("OptionA") %></td>
-                    <td><%# Eval("OptionB") %></td>
-                    <td><%# Eval("OptionC") %></td>
-                    <td><%# Eval("OptionD") %></td>
-                    <td><%# Eval("Correct_Answer") %></td>
-                    <td><%# Eval("Category_Id") %></td>
-                    <td><%# Eval("Level_Id") %></td>
-                    <td>
-                        <button class="btn btn-primary btn-sm" title="Edit" onclick="editCategory('<%# Eval("Id") %>')">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-danger btn-sm" title="Delete" onclick="deleteCategory('<%# Eval("Id") %>')">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                        <button class="btn btn-warning btn-sm" title="Deactivate" onclick="toggleCategoryStatus('<%# Eval("Id") %>')">
-                            <i class="fas fa-ban"></i>
-                        </button>
-                    </td>
+        <table class="table table-bordered table-hover">
+            <thead class="text-white" style="background-color:#1abc9c">
+                <tr>
+                    <th style="width: 5%;">No</th>
+                    <th style="width: 20%;">Question</th>
+                    <th style="width: 10%;">Option A</th>
+                    <th style="width: 10%;">Option B</th>
+                    <th style="width: 10%;">Option C</th>
+                    <th style="width: 10%;">Option D</th>
+                    <th style="width: 5%;">Answer</th>
+                    <th style="width: 5%;">Category</th>
+                    <th style="width: 10%;">Level</th>
+                    <th style="width: 15%;">Actions</th>
                 </tr>
-            </ItemTemplate>
-        </asp:Repeater>
-    </tbody>
-</table>
+            </thead>
+            <tbody>
+                <asp:Repeater ID="rptCategories" runat="server">
+                    <ItemTemplate>
+                        <tr style="height: 5%">
+                            <td><%# Eval("Id") %></td>
+                            <td><%# Eval("Question_Text") %></td>
+                            <td><%# Eval("OptionA") %></td>
+                            <td><%# Eval("OptionB") %></td>
+                            <td><%# Eval("OptionC") %></td>
+                            <td><%# Eval("OptionD") %></td>
+                            <td><%# Eval("Correct_Answer") %></td>
+                            <td><%# Eval("Category_Id") %></td>
+                            <td><%# Eval("Level_Id") %></td>
+                            <td>
+                                <button class="btn btn-primary btn-sm" title="Edit" onclick="editCategory('<%# Eval("Id") %>')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-danger btn-sm" title="Delete" onclick="deleteCategory('<%# Eval("Id") %>')">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                                <button class="btn btn-warning btn-sm" title="Deactivate" onclick="toggleCategoryStatus('<%# Eval("Id") %>')">
+                                    <i class="fas fa-ban"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </ItemTemplate>
+                </asp:Repeater>
+            </tbody>
+        </table>
     </div>
 
     <!-- Add/Edit Question Modal -->
@@ -131,7 +135,6 @@
         </div>
     </div>
 
-    <label id="lblMessage" runat="server"></label>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

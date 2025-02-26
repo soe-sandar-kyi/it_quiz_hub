@@ -118,11 +118,17 @@ namespace QuizHub
                     {
                         connection.Open();
                         cmd.ExecuteNonQuery();
-                        lblMessage.InnerText = "Question added successfully!";
+
+                        LoadQuestions();
+
+                        ScriptManager.RegisterStartupScript(this, GetType(), "ShowSweetAlert",
+                        "Swal.fire({ title: 'Success!', text: 'Category added successfully!', icon: 'success', confirmButtonText: 'OK' });", true);
+
                     }
                     catch (Exception ex)
                     {
-                        lblMessage.InnerText = "Error: " + ex.Message;
+                        ScriptManager.RegisterStartupScript(this, GetType(), "ShowErrorAlert",
+     "Swal.fire({ title: 'Error!', text: '" + ex.Message + "', icon: 'error', confirmButtonText: 'OK' });", true);
                     }
                 }
 

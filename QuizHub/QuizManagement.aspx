@@ -8,62 +8,150 @@
 
     <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .custom-table {
+            border-collapse: collapse;
+            width: 100%;
+            border: 2px solid #ddd; /* Outside border */
+        }
 
-    <h2 class="mb-4">Quiz Management</h2>
+            .custom-table th,
+            .custom-table td {
+                border: none; /* Remove all inner borders */
+                padding: 4px 0px 4px 0px;
+            }
+
+            /* Add bottom border to each row */
+            .custom-table tr {
+                border-bottom: 1px solid #ddd;
+            }
+
+            /* Optional: If you want header row to have a stronger bottom border */
+            .custom-table thead tr {
+                border-bottom: 2px solid #ddd;
+            }
+
+            /* Optional: Add some padding or spacing to header cells for a cleaner look */
+            .custom-table th {
+                padding: 8px 0px 8px 0px;
+            }
+
+        .fixed-table-container {
+            height: 450px;
+            overflow-y: auto; /* Enable vertical scrolling */
+            display: block; /* Allows scrolling within */
+        }
+
+            .fixed-table-container table {
+                width: 100%; /* Ensure table takes full width */
+                border-collapse: collapse; /* Optional: Improve styling */
+            }
+
+
+            .fixed-table-container thead {
+                position: sticky;
+                top: 0;
+                background: #fff; /* Keep headers visible while scrolling */
+                z-index: 1;
+            }
+            /* Custom Scrollbar Styles */
+            .fixed-table-container::-webkit-scrollbar {
+                width: 4px; /* Set scrollbar width */
+                height: 4px; /* Set scrollbar height (for horizontal scrolling) */
+            }
+
+            .fixed-table-container::-webkit-scrollbar-thumb {
+                background: #888; /* Scrollbar color */
+                border-radius: 4px; /* Rounded edges */
+            }
+
+                .fixed-table-container::-webkit-scrollbar-thumb:hover {
+                    background: #555; /* Darker color on hover */
+                }
+    </style>
+
+    <h4 class="mb-4">Quiz Management</h4>
 
     <div class="container-fluid">
+        <asp:HiddenField ID="hiddenQuestionId" runat="server" />
+
+
         <!-- Add Quiz Button -->
         <div class="d-flex justify-content-end mb-3">
-            <button class="btn btn-success mb-3" data-toggle="modal" data-target="#addQuestionModal">Create Quiz</button>
+            <button class="btn btn-outline-primary mb-3" data-toggle="modal" data-target="#addQuestionModal" style="background-color: white; color: #34729C; border-color: #34729C;">Add Quiz</button>
         </div>
 
         <!-- Quizzes Table -->
-        <table class="table table-bordered table-hover">
-            <thead class="text-white" style="background-color:#1abc9c">
-                <tr>
-                    <th style="width: 5%;">No</th>
-                    <th style="width: 20%;">Question</th>
-                    <th style="width: 10%;">Option A</th>
-                    <th style="width: 10%;">Option B</th>
-                    <th style="width: 10%;">Option C</th>
-                    <th style="width: 10%;">Option D</th>
-                    <th style="width: 5%;">Answer</th>
-                    <th style="width: 5%;">Category</th>
-                    <th style="width: 10%;">Level</th>
-                    <th style="width: 15%;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <asp:Repeater ID="rptCategories" runat="server">
-                    <ItemTemplate>
-                        <tr style="height: 5%">
-                            <td><%# Eval("Id") %></td>
-                            <td><%# Eval("Question_Text") %></td>
-                            <td><%# Eval("OptionA") %></td>
-                            <td><%# Eval("OptionB") %></td>
-                            <td><%# Eval("OptionC") %></td>
-                            <td><%# Eval("OptionD") %></td>
-                            <td><%# Eval("Correct_Answer") %></td>
-                            <td><%# Eval("Category_Id") %></td>
-                            <td><%# Eval("Level_Id") %></td>
-                            <td>
-                                <button class="btn btn-primary btn-sm" title="Edit" onclick="editCategory('<%# Eval("Id") %>')">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-danger btn-sm" title="Delete" onclick="deleteCategory('<%# Eval("Id") %>')">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                                <button class="btn btn-warning btn-sm" title="Deactivate" onclick="toggleCategoryStatus('<%# Eval("Id") %>')">
-                                    <i class="fas fa-ban"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </ItemTemplate>
-                </asp:Repeater>
-            </tbody>
-        </table>
-    </div>
+        <div class="fixed-table-container">
 
+            <table class="custom-table table-hover">
+                <thead class="text-white" style="background-color: #34729C;">
+                    <tr>
+                        <th style="width: 5%; text-align: center;">No.</th>
+                        <th style="width: 25%; text-align: left;">Question</th>
+                        <th style="width: 10%; text-align: left;">Option A</th>
+                        <th style="width: 10%; text-align: left;">Option B</th>
+                        <th style="width: 9%; text-align: left;">Option C</th>
+                        <th style="width: 9%; text-align: left;">Option D</th>
+                        <th style="width: 8%; text-align: left;">Answer</th>
+                        <th style="width: 9%; text-align: left;">Category</th>
+                        <th style="width: 9%; text-align: left;">Level</th>
+                        <th style="width: 8%; text-align: left;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <asp:Repeater ID="rptQuestions" runat="server">
+                        <ItemTemplate>
+                            <tr style="height: 5%">
+                                <td style="text-align: center"><%# Eval("RowNum") %></td>
+                                <%-- Show Serial Number Instead of ID --%>
+                                <td><%# Eval("Question_Text") %></td>
+                                <td><%# Eval("OptionA") %></td>
+                                <td><%# Eval("OptionB") %></td>
+                                <td><%# Eval("OptionC") %></td>
+                                <td><%# Eval("OptionD") %></td>
+                                <td style="text-align: center"><%# Eval("Correct_Answer") %></td>
+                                <td><%# Eval("Category_Id") %></td>
+                                <td><%# Eval("Level_Id") %></td>
+                                <td>
+                                    <asp:LinkButton ID="btnEdit" runat="server" CssClass="btn btn-outline-primary btn-sm"
+                                        CommandName="EditQuestion"
+                                        CommandArgument='<%# Eval("Id") + "," + Eval("Question_Text") + "," + Eval("OptionA") + "," + Eval("OptionB") + "," + Eval("OptionC") + "," + Eval("OptionD") + "," + Eval("Correct_Answer") + "," + Eval("Category_Id") + "," + Eval("Level_Id") %>'
+                                        OnCommand="EditQuestion_Click"><i class="fas fa-edit"></i>
+                                    </asp:LinkButton>
+
+                                    <asp:LinkButton ID="btnDelete" runat="server" CssClass="btn btn-outline-danger btn-sm"
+                                        OnClientClick='<%# "return confirmDelete(\"" + Eval("Id") + "\");" %>'
+                                        CommandName="QuestionCategory" CommandArgument='<%# Eval("Id") %>'><i class="fas fa-trash-alt"></i>
+                                    </asp:LinkButton>
+                                </td>
+                            </tr>
+                        </ItemTemplate>
+                    </asp:Repeater>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Pagination -->
+    <nav style="padding-top: 8px;">
+        <ul class="pagination justify-content-end">
+            <li class="page-item" id="btnPrevious" runat="server">
+                <asp:LinkButton ID="lnkPrevious" runat="server" CssClass="page-link" CommandArgument="Previous" OnCommand="ChangePage">« Previous</asp:LinkButton>
+            </li>
+
+            <asp:Repeater ID="rptPagination" runat="server">
+                <ItemTemplate>
+                    <li class='page-item <%# (Eval("PageNumber").ToString() == CurrentPage.ToString()) ? "active" : "disabled" %>'>
+                        <a class="page-link disabled"><%# Eval("PageNumber") %></a>
+                    </li>
+                </ItemTemplate>
+            </asp:Repeater>
+
+            <li class="page-item" id="btnNext" runat="server">
+                <asp:LinkButton ID="lnkNext" runat="server" CssClass="page-link" CommandArgument="Next" OnCommand="ChangePage">Next »</asp:LinkButton>
+            </li>
+        </ul>
+    </nav>
     <!-- Add/Edit Question Modal -->
     <div class="modal fade" id="addQuestionModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
@@ -121,8 +209,8 @@
                             <asp:DropDownList ID="ddlCategory" runat="server" CssClass="form-control"></asp:DropDownList>
                         </div>
                         <div class="form-group col-md-6">
-                            <label>Difficulty</label>
-                            <asp:DropDownList ID="ddlDifficulty" runat="server" CssClass="form-control"></asp:DropDownList>
+                            <label>Level</label>
+                            <asp:DropDownList ID="ddlLevel" runat="server" CssClass="form-control"></asp:DropDownList>
                         </div>
                     </div>
                 </div>
@@ -134,7 +222,27 @@
             </div>
         </div>
     </div>
+    <script>
+        function confirmDelete(categoryId) {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You want to delete this category!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Delete"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Perform postback if confirmed
+                    __doPostBack('<%= rptQuestions.UniqueID %>', categoryId);
+                }
+            });
 
+            return false; // Prevent default postback
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

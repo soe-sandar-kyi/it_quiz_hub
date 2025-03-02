@@ -8,16 +8,18 @@
     <title>User Panel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
+        body, html {
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden; /* Prevent full page scrolling */
         }
 
         #form1 {
             display: flex;
-            min-height: 100vh;
+            height: 100vh; /* Full viewport height */
+            overflow: hidden; /* Prevent unwanted scrolling */
         }
 
         /* Hamburger Menu */
@@ -37,15 +39,18 @@
         }
 
         /* Vertical Navigation Bar */
+        /* Sidebar - Fixed, No Scroll */
         .sidebar {
             width: 250px;
-            background-color: #2c3e50;
+            background-color: #34729C;
             color: #fff;
             padding: 20px;
             box-sizing: border-box;
-            transition: transform 0.3s ease;
-            position: relative;
-            z-index: 999;
+            position: fixed; /* Keep sidebar fixed */
+            top: 0;
+            left: 0;
+            height: 100vh; /* Full height */
+            overflow: hidden; /* Prevent scrolling */
         }
 
             .sidebar h2 {
@@ -55,13 +60,14 @@
                 white-space: nowrap;
             }
 
-        /* Main Content */
+        /* Main Content - Scrollable */
         .main-content {
             flex: 1;
+            margin-left: 250px; /* Ensure content starts after sidebar */
             padding: 20px;
             background-color: #ecf0f1;
-            overflow-y: auto;
-            transition: margin-left 0.3s ease;
+            height: 100vh;
+            overflow-y: auto; /* Allow vertical scrolling */
         }
 
         /* Navigation Items */
@@ -97,7 +103,7 @@
                     }
 
                     .sidebar ul li a.active {
-                        background-color: #1abc9c;
+                        background-color: #6CB1DA;
                     }
 
         /* Mobile Styles */
@@ -108,11 +114,8 @@
 
             .sidebar {
                 position: fixed;
-                top: 0;
                 left: -250px;
-                height: 100vh;
-                padding-top: 60px;
-                overflow-y: auto;
+                transition: left 0.3s ease;
             }
 
                 .sidebar.active {
@@ -120,14 +123,16 @@
                 }
 
             .main-content {
-                margin-left: 0;
+                margin-left: 0; /* Ensure full width when sidebar is hidden */
                 width: 100%;
             }
+        }
 
-            .sidebar h2 {
-                display: block;
-                margin-top: 20px;
-            }
+        .sidebar h2 {
+            display: block;
+            margin-top: 20px;
+        }
+
         }
 
         /* Medium Screens */
@@ -151,11 +156,12 @@
             bottom: 20px;
             width: calc(100% - 40px);
         }
-        .sidebar .logout a {
+
+            .sidebar .logout a {
                 position: absolute;
                 bottom: 20px;
                 width: calc(100% - 40px);
-                background-color: #2c3e50 !important; /* Red color */
+                background-color: #34729C !important; /* Red color */
             }
 
                 .sidebar .logout a:hover {
@@ -174,7 +180,6 @@
                 <li><a href="Home.aspx"><i class="fas fa-tachometer-alt"></i>Home</a></li>
                 <li><a href="Quizzes.aspx"><i class="fas fa-question-circle"></i>Quizzes</a></li>
                 <li><a href="Result.aspx"><i class="fas fa-folder"></i>Results</a></li>
-                <li><a href="Notifications.aspx"><i class="fa-solid fa-bell"></i>Notifications</a></li>
                 <li><a href="Profile.aspx"><i class="fa-regular fa-circle-user"></i>Profile</a></li>
                 <li class="logout"><a href="#"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
             </ul>

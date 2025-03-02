@@ -13,6 +13,7 @@
             padding: 0;
             font-family: Arial, sans-serif;
             min-height: 100vh;
+            overflow: hidden;
         }
 
         #form1 {
@@ -39,7 +40,7 @@
         /* Vertical Navigation Bar */
         .sidebar {
             width: 250px;
-            background-color: #2c3e50;
+            background-color: #34729C;
             color: #fff;
             padding: 20px;
             box-sizing: border-box;
@@ -97,7 +98,7 @@
                     }
 
                     .sidebar ul li a.active {
-                        background-color: #1abc9c;
+                        background-color: #6CB1DA;
                     }
 
         /* Mobile Styles */
@@ -156,7 +157,7 @@
                 position: absolute;
                 bottom: 20px;
                 width: calc(100% - 40px);
-                background-color: #2c3e50 !important; /* Red color */
+                background-color: #34729C !important; /* Red color */
             }
 
                 .sidebar .logout a:hover {
@@ -171,13 +172,14 @@
         <div class="sidebar" id="sidebar">
             <h2>QuizHut</h2>
             <ul>
-                <li><a href="Dashboard.aspx"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
-                <li><a href="CategoryManagement.aspx"><i class="fa-solid fa-table-list"></i><span>Category Management</span></a></li>
-                <li><a href="QuizManagement.aspx"><i class="fas fa-question-circle"></i><span>Quiz Management</span></a></li>
-                <li><a href="Results.aspx"><i class="fas fa-chart-bar"></i><span>Results</span></a></li>
-                <li><a href="UserManagement.aspx"><i class="fas fa-users"></i><span>User Management</span></a></li>
-                <li><a href="Settings.aspx"><i class="fas fa-cog"></i><span>Settings</span></a></li>
-                <li class="logout"><a href="#"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
+                <li><a href="CategoryManagement.aspx?adminId=<%=Session["adminId"] %>"><i class="fa-solid fa-table-list"></i><span>Category Management</span></a></li>
+                <li><a href="QuizManagement.aspx?adminId=<%=Session["adminId"] %>"><i class="fas fa-question-circle"></i><span>Quiz Management</span></a></li>
+                <li><a href="Results.aspx?adminId=<%=Session["adminId"] %>"><i class="fas fa-chart-bar"></i><span>Results</span></a></li>
+                <li><a href="UserManagement.aspx?adminId=<%=Session["adminId"] %>"><i class="fas fa-users"></i><span>User Management</span></a></li>
+                <li><a href="Settings.aspx?adminId=<%= Session["adminId"] %>">
+                    <i class="fas fa-cog"></i><span>Settings</span></a>
+                </li>
+                <li class="logout"><a href="LandingPage.aspx"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
             </ul>
         </div>
 
@@ -190,36 +192,36 @@
     </form>
 
     <script>
-      // Mobile Menu Toggle
-      const hamburger = document.getElementById('hamburger');
-      const sidebar = document.getElementById('sidebar');
+        // Mobile Menu Toggle
+        const hamburger = document.getElementById('hamburger');
+        const sidebar = document.getElementById('sidebar');
 
-      hamburger.addEventListener('click', () => {
-          sidebar.classList.toggle('active');
-      });
+        hamburger.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
 
-      // Close menu when clicking outside on mobile
-      document.addEventListener('click', (e) => {
-          if (window.innerWidth <= 768 &&
-              !sidebar.contains(e.target) &&
-              !hamburger.contains(e.target)) {
-              sidebar.classList.remove('active');
-          }
-      });
+        // Close menu when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768 &&
+                !sidebar.contains(e.target) &&
+                !hamburger.contains(e.target)) {
+                sidebar.classList.remove('active');
+            }
+        });
 
-      // Highlight active menu item
-      document.querySelectorAll('.sidebar a').forEach(link => {
-          if (link.pathname === window.location.pathname) {
-              link.classList.add('active');
-          }
-      });
+        // Highlight active menu item
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            if (link.pathname === window.location.pathname) {
+                link.classList.add('active');
+            }
+        });
 
-      // Window resize handler
-      window.addEventListener('resize', () => {
-          if (window.innerWidth > 768) {
-              sidebar.classList.remove('active');
-          }
-      });
+        // Window resize handler
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('active');
+            }
+        });
     </script>
 </body>
 </html>

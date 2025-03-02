@@ -15,13 +15,67 @@ namespace QuizHub
     {
 
         /// <summary>
-        /// rptCategories control.
+        /// hiddenQuestionId control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptCategories;
+        protected global::System.Web.UI.WebControls.HiddenField hiddenQuestionId;
+
+        /// <summary>
+        /// rptQuestions control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptQuestions;
+
+        /// <summary>
+        /// btnPrevious control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl btnPrevious;
+
+        /// <summary>
+        /// lnkPrevious control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkPrevious;
+
+        /// <summary>
+        /// rptPagination control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptPagination;
+
+        /// <summary>
+        /// btnNext control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl btnNext;
+
+        /// <summary>
+        /// lnkNext control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkNext;
 
         /// <summary>
         /// txtQuestion control.
@@ -87,13 +141,13 @@ namespace QuizHub
         protected global::System.Web.UI.WebControls.DropDownList ddlCategory;
 
         /// <summary>
-        /// ddlDifficulty control.
+        /// ddlLevel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlDifficulty;
+        protected global::System.Web.UI.WebControls.DropDownList ddlLevel;
 
         /// <summary>
         /// btnSaveQuestion control.

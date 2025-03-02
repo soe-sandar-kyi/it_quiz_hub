@@ -177,11 +177,11 @@
         <div class="sidebar" id="sidebar">
             <h2>QuizHut</h2>
             <ul>
-                <li><a href="Home.aspx"><i class="fas fa-tachometer-alt"></i>Home</a></li>
-                <li><a href="Quizzes.aspx"><i class="fas fa-question-circle"></i>Quizzes</a></li>
-                <li><a href="Result.aspx"><i class="fas fa-folder"></i>Results</a></li>
-                <li><a href="Profile.aspx"><i class="fa-regular fa-circle-user"></i>Profile</a></li>
-                <li class="logout"><a href="#"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
+                <li><a href="Home.aspx?adminId=<%=Session["userId"] %>"><i class="fas fa-tachometer-alt"></i>Home</a></li>
+                <li><a href="Quizzes.aspx?adminId=<%=Session["userId"] %>"><i class="fas fa-question-circle"></i>Quizzes</a></li>
+                <li><a href="Result.aspx?adminId=<%=Session["userId"] %>"><i class="fas fa-folder"></i>Results</a></li>
+                <li><a href="Profile.aspx?adminId=<%=Session["userId"] %>"><i class="fa-regular fa-circle-user"></i>Profile</a></li>
+                <li class="logout"><a href="LandingPage.aspx"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
             </ul>
         </div>
 

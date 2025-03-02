@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -11,10 +12,11 @@ namespace QuizHub
 {
     public partial class Settings : System.Web.UI.Page
     {
+        string connectionString = ConfigurationManager.ConnectionStrings["QuizHubDB"].ConnectionString;
+
         private string adminId;
         protected void Page_Load(object sender, EventArgs e)
         {
-
             // Check if adminId is available in session
             if (Session["adminId"] == null)
             {
@@ -30,7 +32,6 @@ namespace QuizHub
 
         private void LoadUser()
         {
-            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\SoeSandarKyi\Desktop\Online Quiz\it_quiz_hub\QuizHub\App_Data\QuizHub.mdf;Integrated Security=True";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -67,16 +68,6 @@ namespace QuizHub
                     "Swal.fire({ title: 'Error!', text: 'Invalid email format.', icon: 'error', confirmButtonText: 'OK' });", true);
                 return;
             }
-
-            // Password Validation (At least 8 chars, 1 uppercase, 1 lowercase, 1 number)
-            //string passwordPattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$";
-            //if (!Regex.IsMatch(password, passwordPattern))
-            //{
-            //    ScriptManager.RegisterStartupScript(this, GetType(), "PasswordError",
-            //        "Swal.fire({ title: 'Error!', text: 'Password must be at least 8 characters and contain uppercase, lowercase, and a number.', icon: 'error', confirmButtonText: 'OK' });", true);
-            //    return;
-            //}
-            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\SoeSandarKyi\Desktop\Online Quiz\it_quiz_hub\QuizHub\App_Data\QuizHub.mdf;Integrated Security=True";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -115,9 +106,6 @@ namespace QuizHub
             string newPass = newPassword.Value.Trim();
             string confirmPass = confirmPassword.Value.Trim();
             string adminId = "AID-1"; // Fetch actual Admin ID based on session or login
-
-            // Database connection
-            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\SoeSandarKyi\Desktop\Online Quiz\it_quiz_hub\QuizHub\App_Data\QuizHub.mdf;Integrated Security=True";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {

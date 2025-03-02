@@ -12,12 +12,21 @@ namespace QuizHub
 {
     public partial class CategoryManagement : System.Web.UI.Page
     {
+        string connectionString = ConfigurationManager.ConnectionStrings["QuizHubDB"].ConnectionString;
+
         private int pageSize = 10;  // Number of rows per page
         private int currentPage;// Current page
         private int totalRecords = 0; // Total rows in DB
         private int totalPages = 0; // Total number of pages
+        private string adminId;
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Check if adminId is available in session
+            if (Session["adminId"] == null)
+            {
+                Response.Redirect("LandingPage.aspx"); // Redirect if not logged in
+            }
+            adminId = Session["adminId"].ToString();
             if (!IsPostBack)
             {
                 currentPage = 1; // Initialize only on first load
@@ -46,8 +55,6 @@ namespace QuizHub
 
         private void LoadCategories()
         {
-            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\SoeSandarKyi\Desktop\Online Quiz\it_quiz_hub\QuizHub\App_Data\QuizHub.mdf;Integrated Security=True";
-
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
@@ -114,7 +121,6 @@ namespace QuizHub
                 return;
             }
 
-            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\SoeSandarKyi\Desktop\Online Quiz\it_quiz_hub\QuizHub\App_Data\QuizHub.mdf;Integrated Security=True";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -168,7 +174,7 @@ namespace QuizHub
                     query = "INSERT INTO Category (Id, Name, Admin_Id, Created_Date) VALUES (@id, @name, @admin_id, @created_date)";
                     cmd = new SqlCommand(query, connection);
                     cmd.Parameters.AddWithValue("@id", newCategoryId);
-                    cmd.Parameters.AddWithValue("@admin_id", "AID-1");
+                    cmd.Parameters.AddWithValue("@admin_id", adminId);
                     cmd.Parameters.AddWithValue("@created_date", DateTime.Now);
                 }
 
@@ -222,8 +228,6 @@ namespace QuizHub
         }
         private void DeleteCategory(string categoryId)
         {
-            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\SoeSandarKyi\Desktop\Online Quiz\it_quiz_hub\QuizHub\App_Data\QuizHub.mdf;Integrated Security=True";
-
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();

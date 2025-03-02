@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI;
@@ -8,12 +9,21 @@ namespace QuizHub
 {
     public partial class QuizManagement : Page
     {
+        string connectionString = ConfigurationManager.ConnectionStrings["QuizHubDB"].ConnectionString;
+
         private int pageSize = 10;  // Number of rows per page
         private int currentPage;// Current page
         private int totalRecords = 0; // Total rows in DB
         private int totalPages = 0; // Total number of pages
+        private string adminId;
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Check if adminId is available in session
+            if (Session["adminId"] == null)
+            {
+                Response.Redirect("LandingPage.aspx"); // Redirect if not logged in
+            }
+            adminId = Session["adminId"].ToString();
             if (!IsPostBack)
             {
                 currentPage = 1; // Initialize only on first load
@@ -44,7 +54,6 @@ namespace QuizHub
 
         private void LoadQuestions()
         {
-            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\SoeSandarKyi\Desktop\Online Quiz\it_quiz_hub\QuizHub\App_Data\QuizHub.mdf;Integrated Security=True";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -109,7 +118,6 @@ namespace QuizHub
 
         private void LoadCategories()
         {
-            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\SoeSandarKyi\Desktop\Online Quiz\it_quiz_hub\QuizHub\App_Data\QuizHub.mdf;Integrated Security=True";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string query = "SELECT Id, Name FROM Category";
@@ -135,7 +143,6 @@ namespace QuizHub
 
         private void LoadDifficultyLevels()
         {
-            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\SoeSandarKyi\Desktop\Online Quiz\it_quiz_hub\QuizHub\App_Data\QuizHub.mdf;Integrated Security=True";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string query = "SELECT Id, Name FROM Level";
@@ -172,7 +179,6 @@ namespace QuizHub
 
             if (!string.IsNullOrEmpty(questionText) && !string.IsNullOrEmpty(categoryId) && !string.IsNullOrEmpty(levelId))
             {
-                string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\SoeSandarKyi\Desktop\Online Quiz\it_quiz_hub\QuizHub\App_Data\QuizHub.mdf;Integrated Security=True";
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -203,10 +209,9 @@ namespace QuizHub
                           VALUES (@CategoryId, @QuestionText, @OptionA, @OptionB, @OptionC, @OptionD, @CorrectAnswer, @AdminId, @CreatedDate, @LevelId)";
 
                         cmd = new SqlCommand(query, connection);
-                        cmd.Parameters.AddWithValue("@AdminId", "AID-1"); // Static Admin ID
+                        cmd.Parameters.AddWithValue("@AdminId", adminId); // Static Admin ID
                         cmd.Parameters.AddWithValue("@CreatedDate", DateTime.Now);
                     }
-
                     // **Common Parameters for Both Insert & Update**
                     cmd.Parameters.AddWithValue("@CategoryId", categoryId);
                     cmd.Parameters.AddWithValue("@QuestionText", questionText);
@@ -291,7 +296,6 @@ namespace QuizHub
 
         private void DeleteQuestion(string questionId)
         {
-            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\SoeSandarKyi\Desktop\Online Quiz\it_quiz_hub\QuizHub\App_Data\QuizHub.mdf;Integrated Security=True";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {

@@ -8,39 +8,33 @@
     <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        .table-row-height {
-            height: 10px;
-        }
+       .custom-table {
+    border-collapse: collapse;
+    width: 100%;
+    border: 2px solid #ddd; /* Outside border */
+}
 
-        .custom-table {
-            border-collapse: collapse;
-            width: 100%;
-            border: 2px solid #ddd; /* Outside border */
-            height: 90%;
-        }
+    .custom-table th,
+    .custom-table td {
+        border: none; /* Remove all inner borders */
+        padding: 4px 0px 4px 0px;
+    }
 
-            .custom-table th,
-            .custom-table td {
-                border: none; /* Remove all inner borders */
-                padding: 4px 0px 4px 0px;
-                vertical-align: middle;
-            }
+    /* Add bottom border to each row */
+    .custom-table tr {
+        border-bottom: 1px solid #ddd;
+    }
 
-            /* Add bottom border to each row */
-            .custom-table tr {
-                border-bottom: 1px solid #ddd;
-            }
+    /* Optional: If you want header row to have a stronger bottom border */
+    .custom-table thead tr {
+        border-bottom: 2px solid #ddd;
+    }
 
-            /* Optional: If you want header row to have a stronger bottom border */
-            .custom-table thead tr {
-                border-bottom: 2px solid #ddd;
-            }
+    /* Optional: Add some padding or spacing to header cells for a cleaner look */
+    .custom-table th {
+        padding: 8px 0px 8px 0px;
+    }
 
-            /* Optional: Add some padding or spacing to header cells for a cleaner look */
-            .custom-table th {
-                padding: 8px 0px 8px 0px;
-                text-align: center;
-            }
 
         .fixed-table-container {
             height: 450px;

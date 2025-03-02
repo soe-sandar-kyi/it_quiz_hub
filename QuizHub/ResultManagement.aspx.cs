@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -10,7 +11,7 @@ using System.Configuration;
 
 namespace QuizHub
 {
-    public partial class Result : System.Web.UI.Page
+    public partial class Results : System.Web.UI.Page
     {
         string connectionString = ConfigurationManager.ConnectionStrings["QuizHubDB"].ConnectionString;
 
@@ -18,15 +19,15 @@ namespace QuizHub
         private int currentPage;// Current page
         private int totalRecords = 0; // Total rows in DB
         private int totalPages = 0; // Total number of pages
-        private string userId;
+        private string adminId;
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Check if userId is available in session
-            if (Session["userId"] == null)
+            // Check if adminId is available in session
+            if (Session["adminId"] == null)
             {
                 Response.Redirect("LandingPage.aspx"); // Redirect if not logged in
             }
-            userId = Session["userId"].ToString();
+            adminId = Session["adminId"].ToString();
             if (!IsPostBack)
             {
                 currentPage = 1; // Initialize only on first load
@@ -51,44 +52,52 @@ namespace QuizHub
             {
                 conn.Open();
 
-                string userId = Session["UserId"]?.ToString(); // Get logged-in UserId from Session
-                if (string.IsNullOrEmpty(userId))
-                {
-                    // Handle case when user is not logged in
-                    return;
-                }
-
-                string filter = txtFilterQuiz.Text.Trim();
-                bool isFiltering = !string.IsNullOrEmpty(filter); // Check if filter is applied
+                string userFilter = txtFilterUser.Value.Trim();
+                string quizFilter = txtFilterQuiz.Value.Trim();
+                bool isUserFiltering = !string.IsNullOrEmpty(userFilter);
+                bool isQuizFiltering = !string.IsNullOrEmpty(quizFilter);
 
                 // Build WHERE clause dynamically
-                string filterCondition = "WHERE r.User_Id = @UserId"; // Always filter by UserId
-                if (isFiltering)
+                string filterCondition = "WHERE 1=1"; // Always true, helps in appending filters dynamically
+
+                if (isUserFiltering)
                 {
-                    filterCondition += " AND c.Name LIKE @Filter"; // Append filter condition if applied
+                    filterCondition += " AND u.Name LIKE @UserFilter";
                 }
 
-                // Count total records based on filter
+                if (isQuizFiltering)
+                {
+                    filterCondition += " AND c.Name LIKE @QuizFilter";
+                }
+
+                // Count total records based on filters
                 string countQuery = $@"
-        SELECT COUNT(*) FROM Result r 
-        JOIN Category c ON r.Category_Id = c.Id 
+        SELECT COUNT(*) 
+        FROM Result r
+        JOIN [User] u ON r.User_Id = u.Id
+        JOIN Category c ON r.Category_Id = c.Id
+        JOIN Level l ON r.Level_Id = l.Id
         {filterCondition}";
 
                 SqlCommand countCmd = new SqlCommand(countQuery, conn);
-                countCmd.Parameters.AddWithValue("@UserId", userId); // Filter by UserId
-                if (isFiltering)
+                if (isUserFiltering)
                 {
-                    countCmd.Parameters.AddWithValue("@Filter", "%" + filter + "%");
+                    countCmd.Parameters.AddWithValue("@UserFilter", "%" + userFilter + "%");
+                }
+                if (isQuizFiltering)
+                {
+                    countCmd.Parameters.AddWithValue("@QuizFilter", "%" + quizFilter + "%");
                 }
 
                 totalRecords = (int)countCmd.ExecuteScalar();
                 totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
                 int startRow = (currentPage - 1) * pageSize;
 
-                // Query with pagination & filter
+                // Query with pagination & filters
                 string query = $@"
         SELECT ROW_NUMBER() OVER (ORDER BY r.Attempted_Date DESC) AS RowNum, 
                r.Id, 
+               u.Name AS UserName, 
                c.Name AS CategoryName, 
                l.Name AS LevelName, 
                r.Total_Question, 
@@ -96,6 +105,7 @@ namespace QuizHub
                r.Score, 
                CONVERT(VARCHAR, r.Attempted_Date, 23) AS AttemptedDate
         FROM Result r
+        JOIN [User] u ON r.User_Id = u.Id
         JOIN Category c ON r.Category_Id = c.Id
         JOIN Level l ON r.Level_Id = l.Id
         {filterCondition}
@@ -103,10 +113,13 @@ namespace QuizHub
         OFFSET @StartRow ROWS FETCH NEXT @PageSize ROWS ONLY";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@UserId", userId); // Ensure UserId is always included
-                if (isFiltering)
+                if (isUserFiltering)
                 {
-                    cmd.Parameters.AddWithValue("@Filter", "%" + filter + "%");
+                    cmd.Parameters.AddWithValue("@UserFilter", "%" + userFilter + "%");
+                }
+                if (isQuizFiltering)
+                {
+                    cmd.Parameters.AddWithValue("@QuizFilter", "%" + quizFilter + "%");
                 }
                 cmd.Parameters.AddWithValue("@StartRow", startRow);
                 cmd.Parameters.AddWithValue("@PageSize", pageSize);
@@ -121,8 +134,6 @@ namespace QuizHub
                 UpdatePaginationUI();
             }
         }
-
-
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
@@ -13,9 +14,16 @@ namespace QuizHub
 {
     public partial class Quizzes : System.Web.UI.Page
     {
-
+        string connectionString = ConfigurationManager.ConnectionStrings["QuizHubDB"].ConnectionString;
+        private string userId;
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Check if userId is available in session
+            if (Session["userId"] == null)
+            {
+                Response.Redirect("LandingPage.aspx"); // Redirect if not logged in
+            }
+            userId = Session["userId"].ToString();
             if (!IsPostBack)
             {
                 LoadLevels();
@@ -28,7 +36,6 @@ namespace QuizHub
         }
         private void LoadCategories()
         {
-            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\SoeSandarKyi\Desktop\Online Quiz\it_quiz_hub\QuizHub\App_Data\QuizHub.mdf;Integrated Security=True";
             string query = "SELECT Id,Name FROM Category";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -44,7 +51,6 @@ namespace QuizHub
 
         private void LoadLevels()
         {
-            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\SoeSandarKyi\Desktop\Online Quiz\it_quiz_hub\QuizHub\App_Data\QuizHub.mdf;Integrated Security=True";
             string query = "SELECT Id,Name FROM Level";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -104,10 +110,6 @@ namespace QuizHub
         {
             string categoryId = hiddenCategoryId.Value;
             string levelId = hiddenLevelId.Value;
-
-
-
-            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\SoeSandarKyi\Desktop\Online Quiz\it_quiz_hub\QuizHub\App_Data\QuizHub.mdf;Integrated Security=True";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -174,13 +176,10 @@ namespace QuizHub
         }
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
-            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\SoeSandarKyi\Desktop\Online Quiz\it_quiz_hub\QuizHub\App_Data\QuizHub.mdf;Integrated Security=True";
-
             int correctCount = 0;
             int totalQuestions = lvQuestions.Items.Count;
             int scorePercentage;
             DateTime attemptedDate = DateTime.Now;
-            string userId = "UID-1";
             string levelId = hiddenLevelId.Value.ToString();
             string categoryId = hiddenCategoryId.Value.ToString();
 
@@ -188,25 +187,6 @@ namespace QuizHub
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-
-                // Step 1: Get the latest Category ID
-                string getMaxIdQuery = "SELECT TOP 1 Id FROM Result ORDER BY Attempted_Date DESC";
-                SqlCommand getMaxIdCmd = new SqlCommand(getMaxIdQuery, conn);
-                object maxIdObj = getMaxIdCmd.ExecuteScalar();
-
-                // Step 2: Determine the new Category ID
-                int newIdNumber = 1; // Default if no existing category
-                if (maxIdObj != null)
-                {
-                    string maxId = maxIdObj.ToString(); // e.g., "CID-10"
-                    int lastNumber;
-                    if (int.TryParse(maxId.Replace("RID-", ""), out lastNumber))
-                    {
-                        newIdNumber = lastNumber + 1;
-                    }
-                }
-                string resultId = "RID-" + newIdNumber; // Generate new ID
-
                 foreach (ListViewItem item in lvQuestions.Items)
                 {
                     // Get Question ID
@@ -239,11 +219,10 @@ namespace QuizHub
                 scorePercentage = (totalQuestions > 0) ? (correctCount * 100) / totalQuestions : 0;
 
                 // 🔹 Insert quiz result into Result table
-                string insertQuery = @"INSERT INTO Result (Id, User_Id, Level_Id, Total_Question, Correct_Answer, Score, Attempted_Date, Category_Id)
-                               VALUES (@Id, @UserId, @LevelId, @TotalQuestion, @CorrectAnswer, @Score, @AttemptedDate, @CategoryId)";
+                string insertQuery = @"INSERT INTO Result (User_Id, Level_Id, Total_Question, Correct_Answer, Score, Attempted_Date, Category_Id)
+                               VALUES (@UserId, @LevelId, @TotalQuestion, @CorrectAnswer, @Score, @AttemptedDate, @CategoryId)";
                 using (SqlCommand cmd = new SqlCommand(insertQuery, conn))
                 {
-                    cmd.Parameters.AddWithValue("@Id", resultId);
                     cmd.Parameters.AddWithValue("@UserId", userId);
                     cmd.Parameters.AddWithValue("@LevelId", levelId);
                     cmd.Parameters.AddWithValue("@TotalQuestion", totalQuestions);

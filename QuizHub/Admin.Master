@@ -174,7 +174,7 @@
             <ul>
                 <li><a href="CategoryManagement.aspx?adminId=<%=Session["adminId"] %>"><i class="fa-solid fa-table-list"></i><span>Category Management</span></a></li>
                 <li><a href="QuizManagement.aspx?adminId=<%=Session["adminId"] %>"><i class="fas fa-question-circle"></i><span>Quiz Management</span></a></li>
-                <li><a href="Results.aspx?adminId=<%=Session["adminId"] %>"><i class="fas fa-chart-bar"></i><span>Results</span></a></li>
+                <li><a href="ResultManagement.aspx?adminId=<%=Session["adminId"] %>"><i class="fas fa-chart-bar"></i><span>Results</span></a></li>
                 <li><a href="UserManagement.aspx?adminId=<%=Session["adminId"] %>"><i class="fas fa-users"></i><span>User Management</span></a></li>
                 <li><a href="Settings.aspx?adminId=<%= Session["adminId"] %>">
                     <i class="fas fa-cog"></i><span>Settings</span></a>
